@@ -1,5 +1,5 @@
 {
-  "name": "my-next-app",
+  "name": "e-commerce-application",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-redux": "^9.3.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
