@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useToast } from "@/components/ui/Toast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/cartSlice";
 import { selectIsInWishlist, toggleWishlist } from "@/store/wishlistSlice";
@@ -13,17 +14,21 @@ type ProductPurchaseActionsProps = {
 
 export function ProductPurchaseActions({ product }: ProductPurchaseActionsProps) {
   const dispatch = useAppDispatch();
+  const { pushToast } = useToast();
   const inWishlist = useAppSelector((state) =>
     selectIsInWishlist(state, product.id),
   );
   const [quantity, setQuantity] = useState(1);
-  const [message, setMessage] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
 
   const outOfStock = product.stock === 0;
 
   function handleAddToCart() {
+    if (outOfStock || adding) return;
+    setAdding(true);
     dispatch(addToCart({ product, quantity }));
-    setMessage(`Added ${quantity} to cart`);
+    pushToast(`Added ${quantity} × ${product.name} to cart`);
+    window.setTimeout(() => setAdding(false), 500);
   }
 
   function handleWishlist() {
@@ -37,7 +42,10 @@ export function ProductPurchaseActions({ product }: ProductPurchaseActionsProps)
         stock: product.stock,
       }),
     );
-    setMessage(inWishlist ? "Removed from wishlist" : "Saved to wishlist");
+    pushToast(
+      inWishlist ? "Removed from wishlist" : "Saved to wishlist",
+      "info",
+    );
   }
 
   return (
@@ -46,36 +54,71 @@ export function ProductPurchaseActions({ product }: ProductPurchaseActionsProps)
         <label htmlFor="quantity" className="text-sm font-medium">
           Quantity
         </label>
-        <input
-          id="quantity"
-          type="number"
-          min={1}
-          max={Math.max(product.stock, 1)}
-          value={quantity}
-          disabled={outOfStock}
-          onChange={(event) =>
-            setQuantity(
-              Math.max(1, Math.min(product.stock, Number(event.target.value) || 1)),
-            )
-          }
-          className="h-11 w-20 rounded-lg border border-border bg-background px-3 text-sm outline-none ring-accent focus:ring-2"
-        />
+        <div className="inline-flex overflow-hidden rounded-lg border border-border">
+          <button
+            type="button"
+            disabled={outOfStock || quantity <= 1}
+            onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+            className="h-11 w-10 bg-muted text-lg font-semibold disabled:opacity-40"
+            aria-label="Decrease quantity"
+          >
+            −
+          </button>
+          <input
+            id="quantity"
+            type="number"
+            min={1}
+            max={Math.max(product.stock, 1)}
+            value={quantity}
+            disabled={outOfStock}
+            onChange={(event) =>
+              setQuantity(
+                Math.max(
+                  1,
+                  Math.min(product.stock, Number(event.target.value) || 1),
+                ),
+              )
+            }
+            className="h-11 w-14 border-x border-border bg-background text-center text-sm outline-none"
+          />
+          <button
+            type="button"
+            disabled={outOfStock || quantity >= product.stock}
+            onClick={() =>
+              setQuantity((value) => Math.min(product.stock, value + 1))
+            }
+            className="h-11 w-10 bg-muted text-lg font-semibold disabled:opacity-40"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <Button disabled={outOfStock} onClick={handleAddToCart}>
-          Add to cart
+        <Button
+          disabled={outOfStock || adding}
+          onClick={handleAddToCart}
+          className="min-w-40 bg-[#fb641b] hover:bg-[#e55a16]"
+        >
+          {adding ? "Adding…" : "Add to cart"}
         </Button>
-        <Button variant="secondary" onClick={handleWishlist}>
-          {inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+        <Button
+          variant="secondary"
+          onClick={handleWishlist}
+          className="min-w-40"
+        >
+          {inWishlist ? "Wishlisted" : "Add to wishlist"}
         </Button>
       </div>
 
-      {message ? (
-        <p className="text-sm text-success" role="status">
-          {message}
-        </p>
-      ) : null}
+      <p className="text-xs text-muted-foreground">
+        {outOfStock
+          ? "Currently unavailable"
+          : product.stock <= 10
+            ? `Only ${product.stock} left — order soon`
+            : "In stock · Delivery by tomorrow for most pin codes"}
+      </p>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Provider } from "react-redux";
+import { ToastProvider } from "@/components/ui/Toast";
 import { STORAGE_KEYS } from "@/lib/storage";
 import { makeStore, type AppStore } from "@/store";
 import { hydrateAuth } from "@/store/authSlice";
@@ -21,17 +22,10 @@ function readJson<T>(key: string): T | null {
   }
 }
 
-export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const storeRef = useRef<AppStore | null>(null);
-
-  if (!storeRef.current) {
-    storeRef.current = makeStore();
-  }
+export function StoreProvider({ children }: { children: ReactNode }) {
+  const [store] = useState<AppStore>(() => makeStore());
 
   useEffect(() => {
-    const store = storeRef.current;
-    if (!store) return;
-
     const cart = readJson<CartItem[]>(STORAGE_KEYS.cart);
     const wishlist = readJson<WishlistItem[]>(STORAGE_KEYS.wishlist);
     const user = readJson<User>(STORAGE_KEYS.auth);
@@ -57,7 +51,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     });
 
     return unsubscribe;
-  }, []);
+  }, [store]);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return (
+    <Provider store={store}>
+      <ToastProvider>{children}</ToastProvider>
+    </Provider>
+  );
 }

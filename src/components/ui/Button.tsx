@@ -8,9 +8,9 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-primary text-primary-foreground hover:bg-zinc-800 focus-visible:ring-primary",
+    "bg-primary text-primary-foreground hover:bg-[#1f5fd0] focus-visible:ring-primary",
   secondary:
-    "bg-muted text-foreground hover:bg-zinc-200 focus-visible:ring-zinc-400",
+    "bg-white text-foreground border border-border hover:bg-muted focus-visible:ring-zinc-400",
   ghost: "bg-transparent text-foreground hover:bg-muted focus-visible:ring-zinc-400",
   danger:
     "bg-danger text-white hover:bg-red-700 focus-visible:ring-danger",

@@ -16,76 +16,82 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="space-y-14">
-      <section className="relative overflow-hidden rounded-2xl bg-zinc-950 text-white">
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80"
-            alt="ShopHub store atmosphere"
-            fill
-            priority
-            className="object-cover opacity-45"
-            sizes="100vw"
-          />
-        </div>
-        <div className="relative z-10 flex min-h-[420px] flex-col justify-end gap-4 px-6 py-10 sm:px-10 sm:py-14 lg:min-h-[480px]">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-zinc-200">
-            ShopHub
-          </p>
-          <h1 className="max-w-xl text-4xl font-semibold tracking-tight sm:text-5xl">
-            Modern shopping, built the Next.js way
-          </h1>
-          <p className="max-w-lg text-base leading-7 text-zinc-200 sm:text-lg">
-            Browse curated products with App Router layouts, dynamic routes, and
-            a service layer ready for real APIs.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Link
-              href={ROUTES.products}
-              className="inline-flex h-11 items-center rounded-lg bg-white px-5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
-            >
-              Shop products
-            </Link>
-            <Link
-              href={ROUTES.categories}
-              className="inline-flex h-11 items-center rounded-lg border border-white/40 px-5 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Browse categories
-            </Link>
+    <div className="space-y-8">
+      <section className="overflow-hidden rounded-lg bg-accent text-white shadow-sm">
+        <div className="grid md:grid-cols-2">
+          <div className="flex flex-col justify-center gap-4 px-6 py-10 sm:px-10">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/80">
+              {`Big Sale`}
+            </p>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              ShopHub Mega Deals
+            </h1>
+            <p className="max-w-md text-sm leading-6 text-white/85 sm:text-base">
+              Thousands of products across mobiles, fashion, home, and more —
+              with filters, sort, and page-by-page browsing.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-1">
+              <Link
+                href={ROUTES.products}
+                className="inline-flex h-11 items-center rounded-md bg-[#fb641b] px-5 text-sm font-semibold text-white transition hover:bg-[#e55a16]"
+              >
+                Explore products
+              </Link>
+              <Link
+                href={ROUTES.categories}
+                className="inline-flex h-11 items-center rounded-md border border-white/40 px-5 text-sm font-semibold text-white transition hover:bg-white/10"
+              >
+                Shop by category
+              </Link>
+            </div>
+          </div>
+          <div className="relative min-h-[220px] md:min-h-full">
+            <Image
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80"
+              alt="ShopHub deals"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </div>
         </div>
       </section>
 
-      <section className="space-y-5">
+      <section className="space-y-4">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Categories</h2>
+            <h2 className="text-xl font-semibold tracking-tight">
+              Shop by category
+            </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Dynamic routes like /categories/electronics
+              Browse popular departments
             </p>
           </div>
-          <Link href={ROUTES.categories} className="text-sm font-medium text-accent hover:underline">
+          <Link
+            href={ROUTES.categories}
+            className="text-sm font-medium text-accent hover:underline"
+          >
             View all
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/categories/${category.slug}`}
-              className="group relative overflow-hidden rounded-xl border border-border"
+              className="group overflow-hidden rounded-lg border border-border bg-background transition hover:shadow-md"
             >
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-square">
                 <Image
                   src={category.imageUrl}
                   alt={category.name}
                   fill
                   className="object-cover transition duration-300 group-hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 50vw, 12vw"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-              <p className="absolute bottom-3 left-3 text-sm font-semibold text-white">
+              <p className="truncate px-2 py-2 text-center text-xs font-semibold text-foreground">
                 {category.name}
               </p>
             </Link>
@@ -93,35 +99,57 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="space-y-5">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Featured</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Highlighted picks from the catalog
-          </p>
+      <section className="space-y-4">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">
+              Featured deals
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Hand-picked offers for you
+            </p>
+          </div>
+          <Link
+            href={ROUTES.products}
+            className="text-sm font-medium text-accent hover:underline"
+          >
+            See all
+          </Link>
         </div>
         <ProductGrid products={featured} />
       </section>
 
-      <section className="space-y-5">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Best sellers</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Popular items customers buy most
-          </p>
+      <section className="space-y-4">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">
+              Best sellers
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Most popular picks this week
+            </p>
+          </div>
+          <Link
+            href={`${ROUTES.products}?sort=popularity`}
+            className="text-sm font-medium text-accent hover:underline"
+          >
+            See all
+          </Link>
         </div>
         <ProductGrid products={bestSellers} />
       </section>
 
-      <section className="rounded-2xl border border-border bg-muted/50 px-6 py-10 text-center sm:px-10">
-        <h2 className="text-2xl font-semibold tracking-tight">Free shipping this week</h2>
+      <section className="rounded-lg border border-border bg-background px-6 py-8 text-center sm:px-10">
+        <h2 className="text-xl font-semibold tracking-tight">
+          Free delivery on orders above ₹499
+        </h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-          Orders over $75 ship free. Explore the cart and checkout flow in later
-          phases — routing and layouts are already production-shaped.
+          Explore the full catalog with search, filters, and pagination — just
+          like a large marketplace.
         </p>
         <Link
           href={ROUTES.products}
-          className="mt-5 inline-flex h-11 items-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground hover:bg-zinc-800"
+          className="mt-5 inline-flex h-11 items-center rounded-md bg-accent px-5 text-sm font-semibold text-accent-foreground hover:bg-[#1f5fd0]"
         >
           Start shopping
         </Link>

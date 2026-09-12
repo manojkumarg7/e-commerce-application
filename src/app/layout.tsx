@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ShopHub | Modern E-commerce",
+    default: "ShopHub | Online Shopping",
     template: "%s | ShopHub",
   },
   description:
-    "A production-style Next.js e-commerce application built for learning App Router, TypeScript, and modern React patterns.",
+    "Shop mobiles, fashion, electronics, home and more with deals, filters, and fast delivery.",
 };
 
 export default function RootLayout({

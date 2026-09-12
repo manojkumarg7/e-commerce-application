@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProductPurchaseActions } from "@/components/product/ProductPurchaseActions";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getDiscountPercent } from "@/lib/utils";
 import { getProductById, getProducts } from "@/services/productService";
 
 type ProductPageProps = {
@@ -68,11 +68,16 @@ export default async function ProductDetailsPage({ params }: ProductPageProps) {
           </p>
         </div>
 
-        <div className="flex items-end gap-3">
+        <div className="flex flex-wrap items-end gap-3">
           <p className="text-3xl font-semibold">{formatCurrency(product.price)}</p>
           {product.compareAtPrice ? (
             <p className="pb-1 text-sm text-muted-foreground line-through">
               {formatCurrency(product.compareAtPrice)}
+            </p>
+          ) : null}
+          {getDiscountPercent(product.price, product.compareAtPrice) ? (
+            <p className="pb-1 text-sm font-semibold text-[#388e3c]">
+              {getDiscountPercent(product.price, product.compareAtPrice)}% off
             </p>
           ) : null}
         </div>
