@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, type MouseEvent } from "react";
 import { useToast } from "@/components/ui/Toast";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { formatCurrency, getDiscountPercent } from "@/lib/utils";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/cartSlice";
@@ -16,6 +17,7 @@ type ProductCardProps = {
 export function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
   const { pushToast } = useToast();
+  const { requireAuth } = useRequireAuth();
   const [imageFailed, setImageFailed] = useState(false);
   const [adding, setAdding] = useState(false);
   const discount = getDiscountPercent(product.price, product.compareAtPrice);
@@ -25,6 +27,8 @@ export function ProductCard({ product }: ProductCardProps) {
     event.preventDefault();
     event.stopPropagation();
     if (outOfStock || adding) return;
+
+    if (!requireAuth("Please login to add items to cart")) return;
 
     setAdding(true);
     dispatch(addToCart({ product, quantity: 1 }));

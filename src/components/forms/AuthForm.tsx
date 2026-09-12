@@ -2,7 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/lib/constants";
 import { useAppDispatch } from "@/store/hooks";
@@ -14,9 +14,17 @@ type AuthFormProps = {
   mode: AuthFormMode;
 };
 
+function safeRedirect(value: string | null): string {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
+    return ROUTES.home;
+  }
+  return value;
+}
+
 export function AuthForm({ mode }: AuthFormProps) {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -50,7 +58,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       }),
     );
 
-    router.push(ROUTES.profile);
+    router.push(safeRedirect(searchParams.get("redirect")));
   }
 
   return (

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/cartSlice";
 import { selectIsInWishlist, toggleWishlist } from "@/store/wishlistSlice";
@@ -15,6 +16,7 @@ type ProductPurchaseActionsProps = {
 export function ProductPurchaseActions({ product }: ProductPurchaseActionsProps) {
   const dispatch = useAppDispatch();
   const { pushToast } = useToast();
+  const { requireAuth } = useRequireAuth();
   const inWishlist = useAppSelector((state) =>
     selectIsInWishlist(state, product.id),
   );
@@ -25,6 +27,8 @@ export function ProductPurchaseActions({ product }: ProductPurchaseActionsProps)
 
   function handleAddToCart() {
     if (outOfStock || adding) return;
+    if (!requireAuth("Please login to add items to cart")) return;
+
     setAdding(true);
     dispatch(addToCart({ product, quantity }));
     pushToast(`Added ${quantity} × ${product.name} to cart`);
@@ -32,6 +36,8 @@ export function ProductPurchaseActions({ product }: ProductPurchaseActionsProps)
   }
 
   function handleWishlist() {
+    if (!requireAuth("Please login to save items to wishlist")) return;
+
     dispatch(
       toggleWishlist({
         id: product.id,

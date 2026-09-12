@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { useToast } from "@/components/ui/Toast";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { ROUTES } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -15,6 +17,8 @@ import { products } from "@/data/products";
 
 export function WishlistView() {
   const dispatch = useAppDispatch();
+  const { pushToast } = useToast();
+  const { requireAuth } = useRequireAuth();
   const items = useAppSelector(selectWishlistItems);
 
   if (items.length === 0) {
@@ -65,7 +69,9 @@ export function WishlistView() {
                   disabled={!fullProduct || item.stock === 0}
                   onClick={() => {
                     if (!fullProduct) return;
+                    if (!requireAuth("Please login to add items to cart")) return;
                     dispatch(addToCart({ product: fullProduct, quantity: 1 }));
+                    pushToast(`${fullProduct.name} added to cart`);
                   }}
                 >
                   Add to cart

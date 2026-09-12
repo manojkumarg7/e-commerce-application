@@ -45,7 +45,7 @@ export const categories: Category[] = [
     slug: "home",
     description: "Furniture, decor, and home essentials.",
     imageUrl:
-      "https://images.unsplash.com/photo-1484101403633-562f91b996bc?w=800&q=80",
+      "https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800&q=80",
   },
   {
     id: "cat-6",
@@ -69,6 +69,6 @@ export const categories: Category[] = [
     slug: "sports",
     description: "Fitness gear and outdoor sports equipment.",
     imageUrl:
-      "https://images.unsplash.com/photo-1461896836934-ffe607ba6851?w=800&q=80",
+      "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80",
   },
 ];
